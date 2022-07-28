@@ -1,0 +1,19 @@
+{
+  "name": "ixpert-server",
+  "version": "1.0.0",
+  "description": "ixpert backend server",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shellparse/ixpert-server.git"
+  },
+  "author": "mohammad alameri",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shellparse/ixpert-server/issues"
+  },
+  "homepage": "https://github.com/shellparse/ixpert-server#readme"
+}
