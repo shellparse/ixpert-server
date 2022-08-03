@@ -1,8 +1,5 @@
-const client =  require("../database/connection.js");
+const service = require("../services/service.js");
 
-async function main(){
-    const db = (await client()).db("shop");
-    const collection = db.collection("user");
-    console.log(collection);
-}
-main();
+// module.exports=async function userSignup(username,name,password){
+//     await service(...arguments);
+// }
