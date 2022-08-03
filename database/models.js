@@ -1,6 +1,4 @@
-const db = require("../database/connection.js");
 
-console.log(db);
 
 // module.exports=client.then((db)=>{
 //     let users = db.collection("user");

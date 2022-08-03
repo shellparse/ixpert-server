@@ -9,9 +9,8 @@ app.use(router);
 
 
 //open the database connection at startup and start listening 
-db.connect(()=>{
+
     app.listen(process.env.PORT||3000,()=>{
         console.log("server is listening");
-    });
-})
+    })
 

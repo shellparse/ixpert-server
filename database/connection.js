@@ -12,20 +12,20 @@ async function connect(callback){
     }else {
         client = new MongoClient(process.env.mongo_URI);
     }
-    client.connect((err,db)=>{
-        if(err)throw err
-        mongodb = db;
+    client.connect((err,client)=>{
+        if(err)callback(err);
+        client=client;
         console.log("connected to db")
     })
         callback();
 }
 
 function get(){
-    return mongodb;
+    return client;
 }
 
 function close(){
-    mongodb.close();
+    client.close();
 }
 
 module.exports = {

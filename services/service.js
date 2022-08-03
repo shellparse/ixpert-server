@@ -1,4 +1,12 @@
-const db =  require("../database/models.js");
+const client =  require("../database/connection.js");
+const models = require("../database/models.js")
+client.connect((err)=>{
+    if(!err){
+        let shopDb=client.get().db("shop");
+        let users = shopDb.collection("user");
+     }
+    });
+
 
 
 
