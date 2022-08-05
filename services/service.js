@@ -35,19 +35,33 @@ connect(async (err) => {
 })
 
 async function createUser (username, name, password) {
-  let response
   try {
-    response = await userCol.insertOne({ username, name, password })
+    return await userCol.insertOne({ username, name, password })
   } catch (e) {
-    response = new Error("could'nt insert user")
+    return e
   }
-  return response
 }
 async function getUserById (id) {
   return await userCol.findOne({ _id: ObjectID(id) })
 }
-
+async function editUserById (id, username) {
+  try {
+    return await userCol.findOneAndUpdate({ _id: ObjectID(id) }, { $set: { username } }, { returnDocument: 'after' })
+  } catch (e) {
+    console.dir(e, { depth: null })
+    return e.toString()
+  }
+}
+async function insertCustomer (name, email, phoneNumber) {
+  try {
+    return await customerCol.insertOne({ ...arguments })
+  } catch (e) {
+    return e.toString()
+  }
+}
 module.exports = {
   createUser,
-  getUserById
+  getUserById,
+  editUserById,
+  insertCustomer
 }
