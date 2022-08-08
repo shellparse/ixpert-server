@@ -16,11 +16,14 @@ connect(async (err) => {
     const collections = await shopDb.listCollections().toArray()
     if (collections.length === 0) {
       userCol = await shopDb.createCollection('user', validateUser)
+      userCol.createIndex({ username: 1 }, { unique: true })
       customerCol = await shopDb.createCollection('customer', validateCustomer)
+      customerCol.createIndex({ phoneNumber: 1, email: 1 }, { unique: true })
       salesInvoiceCol = await shopDb.createCollection('salesInvoice', validateSalesInvoice)
       inventoryCol = await shopDb.createCollection('inventory', validateInventory)
       barcodeSettingsCol = await shopDb.createCollection('barcodeSettings', validateBarcodeSettings)
       repairSlipCol = await shopDb.createCollection('repairSlip', validateRepairSlip)
+      repairSlipCol.createIndex({ number: 1 }, { unique: true })
     } else if (collections.length === 6) {
       userCol = shopDb.collection('user')
       customerCol = shopDb.collection('customer')
@@ -38,7 +41,8 @@ async function createUser (username, name, password) {
   try {
     return await userCol.insertOne({ username, name, password })
   } catch (e) {
-    return e
+    console.dir(e, { depth: null })
+    return e.toString()
   }
 }
 async function getUserById (id) {
@@ -54,8 +58,33 @@ async function editUserById (id, username) {
 }
 async function insertCustomer (name, email, phoneNumber) {
   try {
-    return await customerCol.insertOne({ ...arguments })
+    return await customerCol.insertOne({ name, email, phoneNumber })
   } catch (e) {
+    console.dir(e, { depth: null })
+    return e.toString()
+  }
+}
+async function getCustomerByPhone (phoneNumber) {
+  try {
+    return await customerCol.findOne({ phoneNumber })
+  } catch (e) {
+    console.dir(e, { depth: null })
+    return e.toString()
+  }
+}
+async function insertSlip (customerId, slipNumber, imei, checkInStat, brand, model, neededRepairs, total, cashier) {
+  try {
+    return await repairSlipCol.insertOne({ customerId: ObjectID(customerId), slipNumber, imei, checkInStat, brand, model, neededRepairs, total, cashier: ObjectID(cashier) })
+  } catch (e) {
+    console.dir(e, { depth: null })
+    return e.toString()
+  }
+}
+async function getSlip (slipNumber) {
+  try {
+    return await repairSlipCol.findOne({ slipNumber })
+  } catch (e) {
+    console.dir(e, { depth: null })
     return e.toString()
   }
 }
@@ -63,5 +92,8 @@ module.exports = {
   createUser,
   getUserById,
   editUserById,
-  insertCustomer
+  insertCustomer,
+  getCustomerByPhone,
+  insertSlip,
+  getSlip
 }
