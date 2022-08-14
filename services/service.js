@@ -42,7 +42,7 @@ async function createUser (username, name, password) {
     return await userCol.insertOne({ username, name, password })
   } catch (e) {
     console.dir(e, { depth: null })
-    return e.toString()
+    return e
   }
 }
 async function getUserById (id) {
@@ -53,7 +53,7 @@ async function editUserById (id, username) {
     return await userCol.findOneAndUpdate({ _id: ObjectID(id) }, { $set: { username } }, { returnDocument: 'after' })
   } catch (e) {
     console.dir(e, { depth: null })
-    return e.toString()
+    return e
   }
 }
 async function insertCustomer (name, email, phoneNumber) {
@@ -61,7 +61,7 @@ async function insertCustomer (name, email, phoneNumber) {
     return await customerCol.insertOne({ name, email, phoneNumber })
   } catch (e) {
     console.dir(e, { depth: null })
-    return e.toString()
+    return e
   }
 }
 async function getCustomerByPhone (phoneNumber) {
@@ -69,7 +69,7 @@ async function getCustomerByPhone (phoneNumber) {
     return await customerCol.findOne({ phoneNumber })
   } catch (e) {
     console.dir(e, { depth: null })
-    return e.toString()
+    return e
   }
 }
 async function insertSlip (customerId, slipNumber, imei, checkInStat, brand, model, neededRepairs, total, cashier) {
@@ -77,7 +77,7 @@ async function insertSlip (customerId, slipNumber, imei, checkInStat, brand, mod
     return await repairSlipCol.insertOne({ customerId: ObjectID(customerId), slipNumber, imei, checkInStat, brand, model, neededRepairs, total, cashier: ObjectID(cashier) })
   } catch (e) {
     console.dir(e, { depth: null })
-    return e.toString()
+    return e
   }
 }
 async function getSlip (slipNumber) {
@@ -85,7 +85,7 @@ async function getSlip (slipNumber) {
     return await repairSlipCol.findOne({ slipNumber })
   } catch (e) {
     console.dir(e, { depth: null })
-    return e.toString()
+    return e
   }
 }
 module.exports = {
