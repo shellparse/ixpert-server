@@ -1,11 +1,13 @@
 const express = require('express')
 const router = express.Router()
-const { signUp, findUser, editUser, createCustomer, retrieveCustomer, createSlip, retrieveSlip } = require('../controllers/controller.js')
+const { genSlipNo, signUp, findUser, editUser, createCustomer, retrieveCustomer, createSlip, retrieveSlip } = require('../controllers/controller.js')
 
 router.get('/', (req, res) => {
   res.send('hello router')
 })
-
+router.route('/slipnumber').post(async (req, res) => {
+  res.json(await genSlipNo())
+})
 router.route('/user').post(async (req, res) => {
   const { username, name, password } = req.body
   // const response =
@@ -23,6 +25,9 @@ router.route('/customer').post(async (req, res) => {
   .get(async (req, res) => {
     res.json(await retrieveCustomer(req.body.phoneNumber))
   })
+router.route('/customer/:id').get(async (req, res) => {
+  res.json(await retrieveCustomer(req.params.id))
+})
 // router.route('/inventory').post(async (req, res) => {
 // })
 router.route('/slip').post(async (req, res) => {

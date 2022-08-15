@@ -9,6 +9,7 @@ let salesInvoiceCol
 let inventoryCol
 let barcodeSettingsCol
 let repairSlipCol
+let slipNumberCol
 // database and validation setup
 connect(async (err) => {
   if (!err) {
@@ -24,6 +25,7 @@ connect(async (err) => {
       barcodeSettingsCol = await shopDb.createCollection('barcodeSettings', validateBarcodeSettings)
       repairSlipCol = await shopDb.createCollection('repairSlip', validateRepairSlip)
       repairSlipCol.createIndex({ number: 1 }, { unique: true })
+      slipNumberCol = await shopDb.createCollection('slipNumber')
     } else if (collections.length === 6) {
       userCol = shopDb.collection('user')
       customerCol = shopDb.collection('customer')
@@ -31,6 +33,7 @@ connect(async (err) => {
       inventoryCol = shopDb.collection('inventory')
       barcodeSettingsCol = shopDb.collection('barcodeSettings')
       repairSlipCol = shopDb.collection('repairSlip')
+      slipNumberCol = shopDb.collection('slipNumber')
     } else {
       throw new Error('something went wrong in database setup')
     }
@@ -72,6 +75,14 @@ async function getCustomerByPhone (phoneNumber) {
     return e
   }
 }
+async function getCustomerById (_id) {
+  try {
+    return await customerCol.findOne({ _id: ObjectID(_id) })
+  } catch (e) {
+    console.dir(e, { depth: null })
+    return e
+  }
+}
 async function insertSlip (customerId, slipNumber, imei, checkInStat, brand, model, neededRepairs, total, cashier) {
   try {
     return await repairSlipCol.insertOne({ customerId: ObjectID(customerId), slipNumber, imei, checkInStat, brand, model, neededRepairs, total, cashier: ObjectID(cashier) })
@@ -88,6 +99,14 @@ async function getSlip (slipNumber) {
     return e
   }
 }
+async function genSlip () {
+  try {
+    return await slipNumberCol.findOneAndUpdate({}, { $inc: { lastSlip: 1 } }, { returnDocument: 'after', upsert: true })
+  } catch (e) {
+    console.dir(e, { depth: null })
+    return e
+  }
+}
 module.exports = {
   createUser,
   getUserById,
@@ -95,5 +114,7 @@ module.exports = {
   insertCustomer,
   getCustomerByPhone,
   insertSlip,
-  getSlip
+  getSlip,
+  getCustomerById,
+  genSlip
 }
