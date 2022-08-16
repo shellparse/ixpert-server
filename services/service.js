@@ -107,6 +107,14 @@ async function genSlip () {
     return e
   }
 }
+async function getCustomers (amount) {
+  try {
+    return await customerCol.find({}).sort({ _id: 1 }).limit(amount).toArray()
+  } catch (e) {
+    console.dir(e, { depth: null })
+    return e
+  }
+}
 module.exports = {
   createUser,
   getUserById,
@@ -116,5 +124,6 @@ module.exports = {
   insertSlip,
   getSlip,
   getCustomerById,
-  genSlip
+  genSlip,
+  getCustomers,
 }
