@@ -1,12 +1,15 @@
 const express = require('express')
 const router = express.Router()
-const { retrieveCustomers, genSlipNo, signUp, findUser, editUser, createCustomer, retrieveCustomer, createSlip, retrieveSlip } = require('../controllers/controller.js')
+const { retrieveSlipNo, retrieveCustomers, genSlipNo, signUp, findUser, editUser, createCustomer, retrieveCustomer, createSlip, retrieveSlip } = require('../controllers/controller.js')
 
 router.get('/', (req, res) => {
   res.send('hello router')
 })
 router.route('/slipnumber').post(async (req, res) => {
   res.json(await genSlipNo())
+})
+.get(async (req, res) => {
+  res.json(await retrieveSlipNo())
 })
 router.route('/user').post(async (req, res) => {
   const { username, name, password } = req.body

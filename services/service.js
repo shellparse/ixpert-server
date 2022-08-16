@@ -24,7 +24,7 @@ connect(async (err) => {
       inventoryCol = await shopDb.createCollection('inventory', validateInventory)
       barcodeSettingsCol = await shopDb.createCollection('barcodeSettings', validateBarcodeSettings)
       repairSlipCol = await shopDb.createCollection('repairSlip', validateRepairSlip)
-      repairSlipCol.createIndex({ number: 1 }, { unique: true })
+      repairSlipCol.createIndex({ slipNumber: 1 }, { unique: true })
       slipNumberCol = await shopDb.createCollection('slipNumber')
     } else if (collections.length === 6) {
       userCol = shopDb.collection('user')
@@ -85,7 +85,7 @@ async function getCustomerById (_id) {
 }
 async function insertSlip (customerId, slipNumber, imei, checkInStat, brand, model, neededRepairs, total, cashier) {
   try {
-    return await repairSlipCol.insertOne({ customerId: ObjectID(customerId), slipNumber, imei, checkInStat, brand, model, neededRepairs, total, cashier: ObjectID(cashier) })
+    return await repairSlipCol.insertOne({ customerId: ObjectID(customerId), slipNumber, imei, checkInStat, brand, model, neededRepairs, total, cashier })
   } catch (e) {
     console.dir(e, { depth: null })
     return e
@@ -109,7 +109,15 @@ async function genSlip () {
 }
 async function getCustomers (amount) {
   try {
-    return await customerCol.find({}).sort({ _id: 1 }).limit(amount).toArray()
+    return await customerCol.find({}).sort({ _id: -1 }).limit(amount).toArray()
+  } catch (e) {
+    console.dir(e, { depth: null })
+    return e
+  }
+}
+async function getSlipNo(){
+  try {
+    return await slipNumberCol.findOne({})
   } catch (e) {
     console.dir(e, { depth: null })
     return e
@@ -126,4 +134,5 @@ module.exports = {
   getCustomerById,
   genSlip,
   getCustomers,
+  getSlipNo
 }

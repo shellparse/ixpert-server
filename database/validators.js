@@ -126,7 +126,7 @@ const validateRepairSlip = {
           bsonType: 'int'
         },
         cashier: {
-          bsonType: 'objectId'
+          bsonType: 'string'
         },
         returned: {
           bsonType: 'bool'
