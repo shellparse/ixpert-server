@@ -1,7 +1,7 @@
 const { ObjectID } = require('bson')
 const { connect, get } = require('../database/connection.js')
 const { validateUser, validateCustomer, validateInventory, validateBarcodeSettings, validateRepairSlip, validateSalesInvoice } = require('../database/validators.js')
-
+const PDFDocument = require('pdfkit')
 let shopDb
 let userCol
 let customerCol
@@ -26,7 +26,7 @@ connect(async (err) => {
       repairSlipCol = await shopDb.createCollection('repairSlip', validateRepairSlip)
       repairSlipCol.createIndex({ slipNumber: 1 }, { unique: true })
       slipNumberCol = await shopDb.createCollection('slipNumber')
-    } else if (collections.length === 6) {
+    } else if (collections.length === 7) {
       userCol = shopDb.collection('user')
       customerCol = shopDb.collection('customer')
       salesInvoiceCol = shopDb.collection('salesInvoice')
@@ -115,13 +115,20 @@ async function getCustomers (amount) {
     return e
   }
 }
-async function getSlipNo(){
+async function getSlipNo () {
   try {
     return await slipNumberCol.findOne({})
   } catch (e) {
     console.dir(e, { depth: null })
     return e
   }
+}
+async function genSlipPdf (data, res) {
+  const doc = new PDFDocument()
+  doc.pipe(res)
+  
+  doc.text('Hello world!')
+  doc.end()
 }
 module.exports = {
   createUser,
@@ -134,5 +141,6 @@ module.exports = {
   getCustomerById,
   genSlip,
   getCustomers,
-  getSlipNo
+  getSlipNo,
+  genSlipPdf
 }

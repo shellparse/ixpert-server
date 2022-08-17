@@ -130,6 +130,9 @@ const validateRepairSlip = {
         },
         returned: {
           bsonType: 'bool'
+        },
+        passCode: {
+          bsonType: 'string'
         }
       }
     }
