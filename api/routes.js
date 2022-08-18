@@ -37,10 +37,10 @@ router.route('/customer/:id').get(async (req, res) => {
 // router.route('/inventory').post(async (req, res) => {
 // })
 router.route('/slip').post(async (req, res) => {
-  const { customerId, imei, slipNumber, checkInStat, brand, model, neededRepairs, total, cashier, returned, passCode } = req.body
+  const { customerId, imei, slipNumber, checkInStat, brand, model, neededRepairs, total, cashier, returned, passCode, customerName, customerPhone, customerEmail } = req.body
   const newSlip = await createSlip(customerId, slipNumber, imei, checkInStat, brand, model, neededRepairs, total, cashier, returned, passCode)
   if (newSlip.acknowledged) {
-    await createSlipPdf({ customerId, imei, slipNumber, checkInStat, brand, model, neededRepairs, total, cashier, returned, passCode }, res)
+    await createSlipPdf({ customerId, imei, slipNumber, checkInStat, brand, model, neededRepairs, total, cashier, returned, passCode, customerName, customerPhone, customerEmail }, res)
   } else {
     res.json({ Error: 'could"nt insert in database' })
   }
