@@ -67,7 +67,7 @@ const validateRepairSlip = {
         checkInStat: {
           bsonType: 'object',
           additionalProperties: false,
-          required: ['frontCamera', 'backCamera', 'backGlass', 'frontGlass', 'lcd', 'network', 'chargingPort', 'battery', 'wirelessCharging', 'fingerPrint', 'faceId'],
+          required: ['frontCamera', 'backCamera', 'backGlass', 'frontGlass', 'lcd', 'network', 'chargingPort', 'battery', 'wirelessCharging', 'fingerPrint', 'faceId', 'microphone', 'speaker', 'screws'],
           properties: {
             _id: {
               bsonType: 'objectId'
@@ -104,6 +104,18 @@ const validateRepairSlip = {
             },
             faceId: {
               bsonType: 'bool'
+            },
+            speaker: {
+              bsonType: 'bool'
+            },
+            microphone: {
+              bsonType: 'bool'
+            },
+            screws: {
+              bsonType: 'bool'
+            },
+            notes: {
+              bsonType: 'string'
             }
           }
         },
