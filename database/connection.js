@@ -1,11 +1,12 @@
 require('dotenv').config()
 const { MongoClient } = require('mongodb')
-const { MongoMemoryServer } = require('mongodb-memory-server')
+
 
 let client
 
 async function connect (callback) {
   if (process.env.NODE_ENV === 'development') {
+    const { MongoMemoryServer } = require('mongodb-memory-server')
     const mongod = await MongoMemoryServer.create()
     client = new MongoClient(mongod.getUri())
     console.log(`local mongodb: ${mongod.getUri()}`)
