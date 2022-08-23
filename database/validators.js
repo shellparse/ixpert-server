@@ -125,6 +125,9 @@ const validateRepairSlip = {
         model: {
           bsonType: 'string'
         },
+        color: {
+          bsonType: 'string'
+        },
         neededRepairs: {
           bsonType: 'array',
           items: {
@@ -150,8 +153,65 @@ const validateRepairSlip = {
     }
   }
 }
+const validateInventory = {
+  validator: {
+    $jsonSchema: {
+      bsonType: 'object',
+      additionalProperties: false,
+      required: ['sku', 'price', 'name', 'quantity'],
+      properties: {
+        _id: {
+          bsonType: 'objectId'
+        },
+        name: {
+          bsonType: 'string'
+        },
+        sku: {
+          bsonType: 'string'
+        },
+        price: {
+          bsonType: 'int'
+        },
+        quantity: {
+          bsonType: 'int'
+        },
+        category: {
+          bsonType: 'string'
+        },
+        description: {
+          bsonType: 'string'
+        },
+        image: {
+          bsonType: 'string'
+        },
+        brand: {
+          bsonType: 'string'
+        },
+        model: {
+          bsonType: 'string'
+        },
+        imei: {
+          bsonType: 'string'
+        },
+        ram: {
+          bsonType: 'string'
+        },
+        storage: {
+          bsonType: 'string'
+        },
+        color: {
+          bsonType: 'string'
+        },
+        lastUpdated: {
+          bsonType: 'date'
+        }
+      }
+    }
+  }
+}
 module.exports = {
   validateUser,
   validateCustomer,
-  validateRepairSlip
+  validateRepairSlip,
+  validateInventory
 }

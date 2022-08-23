@@ -22,6 +22,7 @@ connect(async (err) => {
       customerCol.createIndex({ phoneNumber: 1, email: 1 }, { unique: true })
       salesInvoiceCol = await shopDb.createCollection('salesInvoice', validateSalesInvoice)
       inventoryCol = await shopDb.createCollection('inventory', validateInventory)
+      inventoryCol.createIndex({ sku: 1 }, { unique: true })
       barcodeSettingsCol = await shopDb.createCollection('barcodeSettings', validateBarcodeSettings)
       repairSlipCol = await shopDb.createCollection('repairSlip', validateRepairSlip)
       repairSlipCol.createIndex({ slipNumber: 1 }, { unique: true })
@@ -83,9 +84,9 @@ async function getCustomerById (_id) {
     return e
   }
 }
-async function insertSlip (customerId, slipNumber, imei, checkInStat, brand, model, neededRepairs, total, cashier) {
+async function insertSlip (customerId, slipNumber, imei, checkInStat, color, brand, model, neededRepairs, total, cashier) {
   try {
-    return await repairSlipCol.insertOne({ customerId: ObjectID(customerId), slipNumber, imei, checkInStat, brand, model, neededRepairs, total, cashier })
+    return await repairSlipCol.insertOne({ customerId: ObjectID(customerId), slipNumber, imei, checkInStat, color, brand, model, neededRepairs, total, cashier })
   } catch (e) {
     console.dir(e, { depth: null })
     return e
@@ -123,6 +124,15 @@ async function getSlipNo () {
     return e
   }
 }
+
+async function insertInv (sku, category, name, description, price, lastUpdated, quantity, image, brand, model, imei, ram, storage, color) {
+  try {
+    return await inventoryCol.insertOne({ sku, category, name, description, price, lastUpdated: new Date(lastUpdated), quantity, image, brand, model, imei, ram, storage, color })
+  } catch (e) {
+    console.dir(e, { depth: null })
+    return e
+  }
+}
 async function genSlipPdf (data, res) {
   const doc = new PDFDocument({ size: 'A5' })
   doc.pipe(res)
@@ -132,7 +142,11 @@ async function genSlipPdf (data, res) {
     if (!data.checkInStat[prop]) {
       faults.push(prop)
     }
+    if (prop === 'notes') {
+      faults.push(`Notes: ${data.checkInStat[prop]}`)
+    }
   }
+
   const address = 'shop 5                foreshore place    (ABSA building)       cape town'
   const tel = '0618830294'
   const t1 = '1- We can only be liable for parts that we change'
@@ -142,52 +156,56 @@ async function genSlipPdf (data, res) {
   const t5 = '5- Please make sure that you have removed your sim, SD card and important data on the phone'
   const date = new Date()
   doc.path(logo).translate(140, 20).stroke()
-    doc.text(`${address}`, -100, 10, { width: 130 })
-    doc.text(`${tel}`)
-    doc.fontSize(10).text(`${date.toDateString()}  ${date.getHours()}:${date.getMinutes()}`, 150, 91)
-  
-    doc.moveTo(-140, 80)
-      .lineTo(419.53, 80)
-      .stroke()
-  
-    doc.fontSize(14).text(`Repair Slip:   ${data.slipNumber}`, -5, 88).fontSize(10)
-    doc.moveTo(-140, 105)
-      .lineTo(419.53, 105)
-      .stroke()
-    doc.text('Customer details: ', -100, 110)
-    doc.text(`Name: ${data.customerName}`)
-      .text(`Phone number: ${data.customerPhone}`)
-      .text(`Email: ${data.customerEmail}`).moveDown() // .restore()
-      .moveTo(-140, 170)
-      .lineTo(419.53, 170)
-      .stroke()
-    doc.text('Device details: ',90,110).text(`IMEI: ${data.imei}`)
-      .text(`Brand: ${data.brand}`).text(`Model: ${data.model}`)
-      .text(`Passcode: ${data.passCode}`).moveDown()
-    doc.moveTo(-140, 185)
-      .lineTo(419.53, 185)
-      .stroke().save()
-    doc.text('Device faults: ',-100,175).moveDown()
-    doc.moveTo(-140, 310)
-      .lineTo(419.53, 310)
-      .stroke()
-    faults.forEach((fault) => {
-      doc.text(fault)
-    })
-    doc.moveTo(70, 170)
-      .lineTo(70, 310)
-      .stroke()
-    doc.text('Repairs to be done:', 100, 175, { width: 220 }).moveDown()
-    data.neededRepairs.forEach((repair) => {
-      doc.text(repair)
-    })
-    doc.moveTo(-140, 490)
-      .lineTo(419.53, 490)
-      .stroke()
-    doc.moveDown().text(`Total: R${data.total}`)
-    doc.text("Terms and Conditions: ",-100,320).moveDown().text(t1).text(t2).text(t3).text(t4)
-  
-    .text(`Prepared by: ${data.cashier}`,-110,500)
+  doc.text(`${address}`, -100, 10, { width: 130 })
+  doc.text(`${tel}`)
+  doc.fontSize(10).text(`${date.toDateString()}  ${date.getHours()}:${date.getMinutes()}`, 150, 91)
+
+  doc.moveTo(-140, 80)
+    .lineTo(419.53, 80)
+    .stroke()
+
+  doc.fontSize(14).text(`Repair Slip:   ${data.slipNumber}`, -5, 88).fontSize(10)
+  doc.moveTo(-140, 105)
+    .lineTo(419.53, 105)
+    .stroke()
+  doc.text('Client details: ', -100, 110)
+  doc.text(`Name: ${data.customerName}`)
+    .text(`Phone number: ${data.customerPhone}`)
+    .text(`Email: ${data.customerEmail}`).moveDown() // .restore()
+    .moveTo(-140, 185)
+    .lineTo(419.53, 185)
+    .stroke()
+  doc.text('Device details: ', 90, 110).text(`Brand: ${data.brand}`).text(`Model: ${data.model}`)
+    .text(`color: ${data.color}`)
+    .text(`Passcode: ${data.passCode}`).text(`IMEI: ${data.imei}`).moveDown()
+  doc.moveTo(-140, 200)
+    .lineTo(419.53, 200)
+    .stroke().save()
+  doc.text('Device faults: ', -100, 190).moveDown()
+  doc.moveTo(-140, 330)
+    .lineTo(419.53, 330)
+    .stroke()
+  faults.forEach((fault) => {
+    doc.text(fault)
+  })
+  doc.moveTo(70, 185)
+    .lineTo(70, 330)
+    .stroke()
+  doc.text('Repairs to be done:', 100, 190, { width: 220 }).moveDown()
+  data.neededRepairs.forEach((repair) => {
+    doc.text(repair)
+  })
+  doc.moveTo(-140, 490)
+    .lineTo(419.53, 490)
+    .stroke()
+  doc.moveDown().text(`Total: R${data.total}`)
+  doc.text('Terms and Conditions: ', -100, 335).moveDown().text(t1).text(t2).text(t3).text(t4).text(t5, { width: 300 })
+
+    .text(`Prepared by: ${data.cashier}`, -110, 500).text('Client signature:', 90, 500)
+
+  doc.moveTo(70, 490)
+    .lineTo(70, 580)
+    .stroke()
 
   doc.end()
 }
@@ -203,5 +221,6 @@ module.exports = {
   genSlip,
   getCustomers,
   getSlipNo,
-  genSlipPdf
+  genSlipPdf,
+  insertInv
 }

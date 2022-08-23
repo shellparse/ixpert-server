@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { createSlipPdf, retrieveSlipNo, retrieveCustomers, genSlipNo, signUp, findUser, editUser, createCustomer, retrieveCustomer, createSlip, retrieveSlip } = require('../controllers/controller.js')
+const { createInv, createSlipPdf, retrieveSlipNo, retrieveCustomers, genSlipNo, signUp, findUser, editUser, createCustomer, retrieveCustomer, createSlip, retrieveSlip } = require('../controllers/controller.js')
 
 router.get('/', (req, res) => {
   res.send('hello router')
@@ -34,17 +34,23 @@ router.route('/customer').post(async (req, res) => {
 router.route('/customer/:id').get(async (req, res) => {
   res.json(await retrieveCustomer(req.params.id))
 })
-// router.route('/inventory').post(async (req, res) => {
-// })
 router.route('/slip').post(async (req, res) => {
-  const { customerId, imei, slipNumber, checkInStat, brand, model, neededRepairs, total, cashier, returned, passCode, customerName, customerPhone, customerEmail } = req.body
-  const newSlip = await createSlip(customerId, slipNumber, imei, checkInStat, brand, model, neededRepairs, total, cashier, returned, passCode)
+  const { customerId, imei, slipNumber, checkInStat, brand, model, color, neededRepairs, total, cashier, returned, passCode, customerName, customerPhone, customerEmail } = req.body
+  const newSlip = await createSlip(customerId, slipNumber, imei, checkInStat, color, brand, model, neededRepairs, total, cashier, returned, passCode)
   if (newSlip.acknowledged) {
-    await createSlipPdf({ customerId, imei, slipNumber, checkInStat, brand, model, neededRepairs, total, cashier, returned, passCode, customerName, customerPhone, customerEmail }, res)
+    await createSlipPdf({ customerId, imei, slipNumber, checkInStat, brand, model, color, neededRepairs, total, cashier, returned, passCode, customerName, customerPhone, customerEmail }, res)
   } else {
-    res.json({ Error: 'could"nt insert in database' })
+    res.json({ Error: "could'nt insert in database" })
   }
 }).get(async (req, res) => {
   res.json(await retrieveSlip(req.body.slipNumber))
+})
+router.route('/inventory').post(async (req, res) => {
+  const { sku, category = '', name, description = '', price, lastUpdated = new Date(), quantity, image = '', brand = '', model = '', imei = '', ram = '', storage = '', color = '' } = req.body
+  const newInv = await createInv(sku, category, name, description, price, lastUpdated, quantity, image, brand, model, imei, ram, storage, color)
+  res.json(newInv)
+})
+router.route('/inventory/:sku').get(async (req, res) => {
+
 })
 module.exports = router

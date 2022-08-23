@@ -1,11 +1,12 @@
 {
   "name": "ixpert-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ixpert backend server",
   "main": "index.js",
   "scripts": {
     "test": "mocha test",
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "nodemon node app.js"
   },
   "repository": {
     "type": "git",
