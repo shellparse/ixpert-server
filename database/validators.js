@@ -138,7 +138,7 @@ const validateRepairSlip = {
           bsonType: 'bool'
         },
         total: {
-          bsonType: 'int'
+          bsonType: 'number'
         },
         cashier: {
           bsonType: 'string'
@@ -170,7 +170,7 @@ const validateInventory = {
           bsonType: 'string'
         },
         price: {
-          bsonType: 'int'
+          bsonType: 'number'
         },
         quantity: {
           bsonType: 'int'

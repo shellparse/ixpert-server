@@ -86,7 +86,7 @@ async function getCustomerById (_id) {
 }
 async function insertSlip (customerId, slipNumber, imei, checkInStat, color, brand, model, neededRepairs, total, cashier) {
   try {
-    return await repairSlipCol.insertOne({ customerId: ObjectID(customerId), slipNumber, imei, checkInStat, color, brand, model, neededRepairs, total, cashier })
+    return await repairSlipCol.insertOne({ customerId: ObjectID(customerId), slipNumber, imei, checkInStat, color, brand, model, neededRepairs, total: parseFloat(total), cashier })
   } catch (e) {
     console.dir(e, { depth: null })
     return e
@@ -127,7 +127,15 @@ async function getSlipNo () {
 
 async function insertInv (sku, category, name, description, price, lastUpdated, quantity, image, brand, model, imei, ram, storage, color) {
   try {
-    return await inventoryCol.insertOne({ sku, category, name, description, price, lastUpdated: new Date(lastUpdated), quantity, image, brand, model, imei, ram, storage, color })
+    return await inventoryCol.insertOne({ sku, category, name, description, price: parseFloat(price), lastUpdated: new Date(lastUpdated), quantity, image, brand, model, imei, ram, storage, color })
+  } catch (e) {
+    console.dir(e, { depth: null })
+    return e
+  }
+}
+async function getInvItems () {
+  try {
+    return await inventoryCol.find({}).toArray()
   } catch (e) {
     console.dir(e, { depth: null })
     return e
@@ -222,5 +230,6 @@ module.exports = {
   getCustomers,
   getSlipNo,
   genSlipPdf,
-  insertInv
+  insertInv,
+  getInvItems
 }
