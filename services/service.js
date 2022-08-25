@@ -179,7 +179,7 @@ async function genSlipPdf (data, res) {
   doc.text('Client details: ', -100, 110)
   doc.text(`Name: ${data.customerName}`)
     .text(`Phone number: ${data.customerPhone}`)
-    .text(`Email: ${data.customerEmail}`).moveDown() // .restore()
+    .text(`Email: ${data.customerEmail}`).moveDown()
     .moveTo(-140, 185)
     .lineTo(419.53, 185)
     .stroke()

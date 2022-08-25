@@ -1,7 +1,6 @@
 require('dotenv').config()
 const { MongoClient } = require('mongodb')
 
-
 let client
 
 async function connect (callback) {
