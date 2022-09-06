@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { retrieveInvItems, createInv, createSlipPdf, retrieveSlipNo, retrieveCustomers, genSlipNo, signUp, findUser, editUser, createCustomer, retrieveCustomer, createSlip, retrieveSlip } = require('../controllers/controller.js')
+const { editInv, retrieveInvItems, createInv, createSlipPdf, retrieveSlipNo, retrieveCustomers, genSlipNo, signUp, findUser, editUser, createCustomer, retrieveCustomer, createSlip, retrieveSlip } = require('../controllers/controller.js')
 
 router.get('/', (req, res) => {
   res.send('hello router')
@@ -51,5 +51,9 @@ router.route('/inventory').post(async (req, res) => {
   res.json(newInv)
 }).get(async (req, res) => {
   res.json(await retrieveInvItems())
+})
+router.route('/inventory/:id').put(async (req, res) => {
+  const { _id, sku, category, name, description, price, lastUpdated, quantity, image, brand, model, imei, ram, storage, color } = req.body
+  res.json(await editInv(_id, sku, category, name, description, price, lastUpdated, quantity, image, brand, model, imei, ram, storage, color))
 })
 module.exports = router
