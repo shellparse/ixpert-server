@@ -141,9 +141,9 @@ async function getInvItems () {
     return e
   }
 }
-async function updateInv (_id, sku, category, name, description, price, lastUpdated, quantity, image, brand, model, imei, ram, storage, color) {
+async function updateInv (_id, updateBody) {
   try {
-    return await inventoryCol.findOneAndUpdate({ _id: ObjectID(_id) }, { $set: { sku, category, name, description, price: parseFloat(price), lastUpdated: new Date(), quantity: parseInt(quantity), image, brand, model, imei, ram, storage, color } }, { returnDocument: 'after' })
+    return await inventoryCol.findOneAndUpdate({ _id: ObjectID(_id) }, { $set: updateBody }, { returnDocument: 'after' })
   } catch (e) {
     console.dir(e, { depth: null })
     return e
