@@ -142,11 +142,19 @@ async function getInvItems () {
   }
 }
 async function updateInv (_id, updateBody) {
+  const date = new Date()
   try {
-    return await inventoryCol.findOneAndUpdate({ _id: ObjectID(_id) }, { $set: updateBody }, { returnDocument: 'after' })
+    return await inventoryCol.findOneAndUpdate({ _id: ObjectID(_id) }, { $set: { ...updateBody, lastUpdated: date } }, { returnDocument: 'after' })
   } catch (e) {
     console.dir(e, { depth: null })
     return e
+  }
+}
+async function insertInvoice () {
+  try {
+    return await salesInvoiceCol.insertOne({ ...arguments })
+  } catch (e) {
+    console.dir(e, { depth: null })
   }
 }
 async function genSlipPdf (data, res) {
@@ -240,5 +248,6 @@ module.exports = {
   genSlipPdf,
   insertInv,
   getInvItems,
-  updateInv
+  updateInv,
+  insertInvoice
 }

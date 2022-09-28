@@ -209,9 +209,48 @@ const validateInventory = {
     }
   }
 }
+const validateSalesInvoice = {
+  validator: {
+    $jsonSchema: {
+      bsonType: 'object',
+      additionalProperties: false,
+      required: ['customerId', 'number', 'cashier'],
+      properties: {
+        _id: {
+          bsonType: 'objectId'
+        },
+        customerId: {
+          bsonType: 'string'
+        },
+        number: {
+          bsonType: 'string'
+        },
+        cashier: {
+          bsonType: 'string'
+        },
+        paymentMethod: {
+          bsonType: 'string'
+        },
+        items: {
+          bsonType: 'array',
+          items: {
+            bsonType: 'object'
+          }
+        },
+        notes: {
+          bsonType: 'string'
+        },
+        paid: {
+          bsonType: 'bool'
+        }
+      }
+    }
+  }
+}
 module.exports = {
   validateUser,
   validateCustomer,
   validateRepairSlip,
-  validateInventory
+  validateInventory,
+  validateSalesInvoice
 }

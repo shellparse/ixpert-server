@@ -1,5 +1,5 @@
 const { ObjectID } = require('bson')
-const { updateInv, getInvItems, insertInv, genSlipPdf, getSlipNo, getCustomers, genSlip, getCustomerById, createUser, getUserById, editUserById, insertCustomer, getCustomerByPhone, insertSlip, getSlip } = require('../services/service.js')
+const { insertInvoice, updateInv, getInvItems, insertInv, genSlipPdf, getSlipNo, getCustomers, genSlip, getCustomerById, createUser, getUserById, editUserById, insertCustomer, getCustomerByPhone, insertSlip, getSlip } = require('../services/service.js')
 
 async function signUp () {
   const createdUser = await createUser(...arguments)
@@ -53,6 +53,9 @@ async function retrieveInvItems () {
 async function editInv () {
   return await updateInv(...arguments)
 }
+async function createInvoice () {
+  return await insertInvoice(...arguments)
+}
 module.exports = {
   signUp,
   findUser,
@@ -67,5 +70,6 @@ module.exports = {
   createSlipPdf,
   createInv,
   retrieveInvItems,
-  editInv
+  editInv,
+  createInvoice
 }
