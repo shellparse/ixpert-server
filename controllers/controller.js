@@ -47,8 +47,8 @@ async function createSlipPdf (data, res) {
 async function createInv () {
   return await insertInv(...arguments)
 }
-async function retrieveInvItems () {
-  return await getInvItems()
+async function retrieveInvItems (sku) {
+  return await getInvItems(sku)
 }
 async function editInv () {
   return await updateInv(...arguments)

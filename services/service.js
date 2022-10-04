@@ -133,9 +133,14 @@ async function insertInv (sku, category, name, description, price, lastUpdated, 
     return e
   }
 }
-async function getInvItems () {
+async function getInvItems (sku) {
   try {
-    return await inventoryCol.find({}).toArray()
+    if (sku) {
+      const regEx = new RegExp(`^${sku}`, 'gi')
+      return await inventoryCol.find({ sku: { $regex: regEx } }).toArray()
+    } else {
+      return await inventoryCol.find({ }).toArray()
+    }
   } catch (e) {
     console.dir(e, { depth: null })
     return e

@@ -49,7 +49,7 @@ router.route('/inventory').post(async (req, res) => {
   const newInv = await createInv(sku, category, name, description, price, lastUpdated, quantity, image, brand, model, imei, ram, storage, color)
   res.json(newInv)
 }).get(async (req, res) => {
-  res.json(await retrieveInvItems())
+  res.json(await retrieveInvItems(req.query.sku))
 })
 router.route('/inventory/:id').put(async (req, res) => {
   res.json(await editInv(req.params.id, req.body))
