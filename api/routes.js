@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { createInvoice, editInv, retrieveInvItems, createInv, createSlipPdf, retrieveSlipNo, retrieveCustomers, genSlipNo, signUp, findUser, editUser, createCustomer, retrieveCustomer, createSlip, retrieveSlip } = require('../controllers/controller.js')
+const { getInvoiceNo, createInvoice, editInv, retrieveInvItems, createInv, createSlipPdf, retrieveSlipNo, retrieveCustomers, genSlipNo, signUp, findUser, editUser, createCustomer, retrieveCustomer, createSlip, retrieveSlip } = require('../controllers/controller.js')
 
 router.get('/', (req, res) => {
   res.send('hello router')
@@ -56,5 +56,8 @@ router.route('/inventory/:id').put(async (req, res) => {
 })
 router.route('/salesinvoice').post(async (req, res) => {
   res.json(await createInvoice())
+})
+router.route('/invoicenumber').get(async (req, res)=>{
+  res.json(await getInvoiceNo())
 })
 module.exports = router

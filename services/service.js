@@ -27,7 +27,8 @@ connect(async (err) => {
       repairSlipCol = await shopDb.createCollection('repairSlip', validateRepairSlip)
       repairSlipCol.createIndex({ slipNumber: 1 }, { unique: true })
       slipNumberCol = await shopDb.createCollection('slipNumber')
-    } else if (collections.length === 7) {
+      invoiceNumberCol = await shopDb.createCollection('invoiceNumber')
+    } else if (collections.length === 8) {
       userCol = shopDb.collection('user')
       customerCol = shopDb.collection('customer')
       salesInvoiceCol = shopDb.collection('salesInvoice')
@@ -35,6 +36,7 @@ connect(async (err) => {
       barcodeSettingsCol = shopDb.collection('barcodeSettings')
       repairSlipCol = shopDb.collection('repairSlip')
       slipNumberCol = shopDb.collection('slipNumber')
+      invoiceNumberCol = shopDb.collection('invoiceNumber')
     } else {
       throw new Error('something went wrong in database setup')
     }

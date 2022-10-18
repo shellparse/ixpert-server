@@ -56,6 +56,9 @@ async function editInv () {
 async function createInvoice () {
   return await insertInvoice(...arguments)
 }
+async function retrieveInvoiceNo () {
+  return await getInvoiceNo()
+}
 module.exports = {
   signUp,
   findUser,
