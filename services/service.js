@@ -10,6 +10,7 @@ let inventoryCol
 let barcodeSettingsCol
 let repairSlipCol
 let slipNumberCol
+let invoiceNumberCol
 // database and validation setup
 connect(async (err) => {
   if (!err) {
@@ -162,8 +163,26 @@ async function insertInvoice () {
     return await salesInvoiceCol.insertOne({ ...arguments })
   } catch (e) {
     console.dir(e, { depth: null })
+    return e
   }
 }
+async function getInvoiceNo () {
+  try {
+    return await invoiceNumberCol.findOne({})
+  } catch (e) {
+    console.dir(e, { depth: null })
+    return e
+  }
+}
+async function genInvoice () {
+  try {
+    return await invoiceNumberCol.findOneAndUpdate({}, { $inc: { lastInvoice: 1 } }, { returnDocument: 'after', upsert: true })
+  } catch (e) {
+    console.dir(e, { depth: null })
+    return e
+  }
+}
+
 async function genSlipPdf (data, res) {
   const doc = new PDFDocument({ size: 'A5' })
   doc.pipe(res)
@@ -256,5 +275,7 @@ module.exports = {
   insertInv,
   getInvItems,
   updateInv,
-  insertInvoice
+  insertInvoice,
+  getInvoiceNo,
+  genInvoice
 }

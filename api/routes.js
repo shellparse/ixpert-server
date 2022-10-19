@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { getInvoiceNo, createInvoice, editInv, retrieveInvItems, createInv, createSlipPdf, retrieveSlipNo, retrieveCustomers, genSlipNo, signUp, findUser, editUser, createCustomer, retrieveCustomer, createSlip, retrieveSlip } = require('../controllers/controller.js')
+const { genInvoiceNo, retrieveInvoiceNo, createInvoice, editInv, retrieveInvItems, createInv, createSlipPdf, retrieveSlipNo, retrieveCustomers, genSlipNo, signUp, findUser, editUser, createCustomer, retrieveCustomer, createSlip, retrieveSlip } = require('../controllers/controller.js')
 
 router.get('/', (req, res) => {
   res.send('hello router')
@@ -55,9 +55,12 @@ router.route('/inventory/:id').put(async (req, res) => {
   res.json(await editInv(req.params.id, req.body))
 })
 router.route('/salesinvoice').post(async (req, res) => {
-  res.json(await createInvoice())
+  res.json(await createInvoice({ ...req.body }))
 })
-router.route('/invoicenumber').get(async (req, res)=>{
-  res.json(await getInvoiceNo())
+router.route('/invoicenumber').get(async (req, res) => {
+  res.json(await retrieveInvoiceNo())
 })
+  .post(async (req, res) => {
+    res.json(await genInvoiceNo())
+  })
 module.exports = router

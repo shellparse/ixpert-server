@@ -220,7 +220,7 @@ const validateSalesInvoice = {
           bsonType: 'objectId'
         },
         customerId: {
-          bsonType: 'string'
+          bsonType: 'objectId'
         },
         number: {
           bsonType: 'string'
