@@ -54,7 +54,8 @@ async function editInv () {
   return await updateInv(...arguments)
 }
 async function createInvoice () {
-  return await insertInvoice(...arguments)
+  const [number, total, cashier, items, customerId] = { ...arguments[0] }
+  return await insertInvoice(number.toString(), total, cashier, items, ObjectID(customerId))
 }
 async function retrieveInvoiceNo () {
   return await getInvoiceNo()

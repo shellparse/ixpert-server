@@ -242,6 +242,9 @@ const validateSalesInvoice = {
         },
         paid: {
           bsonType: 'bool'
+        },
+        total: {
+          bsonType: 'number'
         }
       }
     }

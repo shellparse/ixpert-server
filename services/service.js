@@ -160,7 +160,8 @@ async function updateInv (_id, updateBody) {
 }
 async function insertInvoice () {
   try {
-    return await salesInvoiceCol.insertOne({ ...arguments })
+    console.log(arguments)
+    return await salesInvoiceCol.insertOne(...arguments)
   } catch (e) {
     console.dir(e, { depth: null })
     return e
