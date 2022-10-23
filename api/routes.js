@@ -55,7 +55,7 @@ router.route('/inventory/:id').put(async (req, res) => {
   res.json(await editInv(req.params.id, req.body))
 })
 router.route('/salesinvoice').post(async (req, res) => {
-  res.json(await createInvoice({ ...req.body }))
+  res.json(await createInvoice(req.body))
 })
 router.route('/invoicenumber').get(async (req, res) => {
   res.json(await retrieveInvoiceNo())

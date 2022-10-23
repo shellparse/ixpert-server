@@ -158,10 +158,13 @@ async function updateInv (_id, updateBody) {
     return e
   }
 }
-async function insertInvoice () {
+async function insertInvoice (invoice) {
   try {
-    console.log(arguments)
-    return await salesInvoiceCol.insertOne(...arguments)
+    const result = await salesInvoiceCol.insertOne({ ...invoice, number: invoice.number.toString(), customerId: ObjectID(invoice.customerId) })
+    if (result.acknowledged) {
+      genInvoice()
+    }
+    return result
   } catch (e) {
     console.dir(e, { depth: null })
     return e

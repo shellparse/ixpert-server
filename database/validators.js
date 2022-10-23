@@ -214,7 +214,7 @@ const validateSalesInvoice = {
     $jsonSchema: {
       bsonType: 'object',
       additionalProperties: false,
-      required: ['customerId', 'number', 'cashier'],
+      required: ['customerId', 'number', 'cashier', 'items'],
       properties: {
         _id: {
           bsonType: 'objectId'
@@ -234,7 +234,22 @@ const validateSalesInvoice = {
         items: {
           bsonType: 'array',
           items: {
-            bsonType: 'object'
+            bsonType: 'object',
+            required: ['sku', 'name', 'price', 'amount'],
+            properties: {
+              sku: {
+                bsonType: 'string'
+              },
+              name: {
+                bsonType: 'string'
+              },
+              price: {
+                bsonType: 'number'
+              },
+              amount: {
+                bsonType: 'number'
+              }
+            }
           }
         },
         notes: {
