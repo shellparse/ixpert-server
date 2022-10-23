@@ -233,6 +233,7 @@ const validateSalesInvoice = {
         },
         items: {
           bsonType: 'array',
+          minItems: 1,
           items: {
             bsonType: 'object',
             required: ['sku', 'name', 'price', 'amount'],
