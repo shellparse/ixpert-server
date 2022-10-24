@@ -55,11 +55,7 @@ router.route('/inventory/:id').put(async (req, res) => {
   res.json(await editInv(req.params.id, req.body))
 })
 router.route('/salesinvoice').post(async (req, res) => {
-  const newInvoice = await createInvoice(req.body)
-  if (newInvoice.acknowledged) {
-    console.log('generate new pdf please')
-  }
-  res.json(newInvoice)
+  await createInvoice(req.body, res)
 })
 router.route('/invoicenumber').get(async (req, res) => {
   res.json(await retrieveInvoiceNo())
