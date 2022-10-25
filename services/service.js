@@ -208,7 +208,7 @@ async function genInvoicePdf (data, res) {
   doc.moveTo(-140, 80)
     .lineTo(419.53, 80)
     .stroke()
-  doc.fontSize(14).text(`Invoice Number:   ${data.invoiceNumber}`, -5, 88).fontSize(10)
+  doc.fontSize(14).text(`Invoice No:   ${data.number}`, -5, 88).fontSize(10)
   doc.moveTo(-140, 105)
     .lineTo(419.53, 105)
     .stroke()
