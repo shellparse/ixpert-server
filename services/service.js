@@ -187,6 +187,20 @@ async function genInvoice () {
     return e
   }
 }
+
+async function getInvoice (no) {
+  try {
+    if (no) {
+      return await salesInvoiceCol.findOne({ number: no })
+    } else {
+      return await salesInvoiceCol.find({}).toArray()
+    }
+  } catch (e) {
+    console.dir(e, { depth: null })
+    return e
+  }
+}
+
 async function genInvoicePdf (data, res) {
   const doc = new PDFDocument({ size: 'A5' })
   doc.pipe(res)
@@ -362,5 +376,6 @@ module.exports = {
   insertInvoice,
   getInvoiceNo,
   genInvoice,
-  genInvoicePdf
+  genInvoicePdf,
+  getInvoice
 }
