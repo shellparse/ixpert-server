@@ -164,6 +164,9 @@ async function insertInvoice (invoice) {
     const result = await salesInvoiceCol.insertOne({ ...invoice, number: invoice.number.toString(), customerId: ObjectID(invoice.customerId) })
     if (result.acknowledged) {
       genInvoice()
+      invoice.items.forEach((item)=>{
+        inventoryCol.findOneAndUpdate({_id: ObjectID(item._id)}, {$inc: {quantity: -item.amount}})
+      })
     }
     return result
   } catch (e) {
