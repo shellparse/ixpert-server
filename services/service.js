@@ -190,11 +190,16 @@ async function genInvoice () {
 
 async function getInvoice (no) {
   try {
-    if (no) {
-      return await salesInvoiceCol.findOne({ number: no })
-    } else {
-      return await salesInvoiceCol.find({}).toArray()
-    }
+    return await salesInvoiceCol.aggregate([{ $match: no ? { number: no } : {} },
+      {
+        $lookup: {
+          from: 'customer',
+          localField: 'customerId',
+          foreignField: '_id',
+          as: 'customerDetails'
+        }
+      }
+    ]).toArray()
   } catch (e) {
     console.dir(e, { depth: null })
     return e
