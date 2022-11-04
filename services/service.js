@@ -23,6 +23,7 @@ connect(async (err) => {
       customerCol = await shopDb.createCollection('customer', validateCustomer)
       customerCol.createIndex({ phoneNumber: 1, email: 1 }, { unique: true })
       salesInvoiceCol = await shopDb.createCollection('salesInvoice', validateSalesInvoice)
+      salesInvoiceCol.createIndex({ number: 1 }, { unique: true })
       inventoryCol = await shopDb.createCollection('inventory', validateInventory)
       inventoryCol.createIndex({ sku: 1 }, { unique: true })
       barcodeSettingsCol = await shopDb.createCollection('barcodeSettings', validateBarcodeSettings)
@@ -161,11 +162,11 @@ async function updateInv (_id, updateBody) {
 }
 async function insertInvoice (invoice) {
   try {
-    const result = await salesInvoiceCol.insertOne({ ...invoice, number: invoice.number.toString(), customerId: ObjectID(invoice.customerId) })
+    const result = await salesInvoiceCol.insertOne({ ...invoice, number: invoice.number.toString(), customerId: ObjectID(invoice.customerId), items: invoice.items.map((item) => { return { ...item, _id: ObjectID(item._id) } }) })
     if (result.acknowledged) {
       genInvoice()
-      invoice.items.forEach((item)=>{
-        inventoryCol.findOneAndUpdate({_id: ObjectID(item._id)}, {$inc: {quantity: -item.amount}})
+      invoice.items.forEach((item) => {
+        inventoryCol.findOneAndUpdate({ _id: ObjectID(item._id) }, { $inc: { quantity: -item.amount } })
       })
     }
     return result
@@ -208,7 +209,6 @@ async function getInvoice (no) {
     return e
   }
 }
-
 async function genInvoicePdf (data, res) {
   const doc = new PDFDocument({ size: 'A5' })
   doc.pipe(res)
@@ -235,9 +235,9 @@ async function genInvoicePdf (data, res) {
     .lineTo(419.53, 105)
     .stroke()
   doc.text('Client details: ', -100, 110)
-  doc.text(`Name: ${data.customerName}`)
-    .text(`Phone number: ${data.customerPhone}`)
-    .text(`Email: ${data.customerEmail}`).moveDown()
+  doc.text(`Name: ${data.customerDetails.name}`)
+    .text(`Phone number: ${data.customerDetails.phoneNumber}`)
+    .text(`Email: ${data.customerDetails.email}`).moveDown()
     .moveTo(-140, 160)
     .lineTo(419.53, 160)
     .stroke()
@@ -247,23 +247,23 @@ async function genInvoicePdf (data, res) {
   doc.moveTo(-140, 400)
     .lineTo(419.53, 400)
     .stroke()
-    // items divider
+  // items divider
   doc.moveTo(cord.item, 160)
     .lineTo(cord.item, 400)
     .stroke()
-  // item number divider
+    // item number divider
   doc.moveTo(cord.hash, 160)
     .lineTo(cord.hash, 400)
     .stroke()
-  // sku divider
+    // sku divider
   doc.moveTo(cord.sku, 160)
     .lineTo(cord.sku, 400)
     .stroke()
-  // quantity divider
+    // quantity divider
   doc.moveTo(cord.qty, 160)
     .lineTo(cord.qty, 400)
     .stroke()
-  // price divider
+    // price divider
   doc.moveTo(cord.price, 160)
     .lineTo(cord.price, 400)
     .stroke()

@@ -238,6 +238,9 @@ const validateSalesInvoice = {
             bsonType: 'object',
             required: ['sku', 'name', 'price', 'amount'],
             properties: {
+              _id: {
+                bsonType: 'objectId'
+              },
               sku: {
                 bsonType: 'string'
               },

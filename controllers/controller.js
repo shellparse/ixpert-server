@@ -54,9 +54,18 @@ async function editInv () {
   return await updateInv(...arguments)
 }
 async function createInvoice (invoice, res) {
-  const newInvoice = await insertInvoice(invoice)
+  const { customerDetails, ...rest } = invoice
+  const newInvoice = await insertInvoice(rest)
   if (newInvoice.acknowledged) {
-    genInvoicePdf(invoice, res)
+    try {
+      if (invoice.customerDetails) {
+        genInvoicePdf(invoice, res)
+      } else {
+        throw Error
+      }
+    } catch (e) {
+      res.json({ error: 'invoice created but failed to generate pdf' })
+    }
   }
 }
 async function retrieveInvoiceNo () {
