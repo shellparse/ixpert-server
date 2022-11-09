@@ -92,7 +92,11 @@ async function getCustomerById (_id) {
 }
 async function insertSlip (customerId, slipNumber, imei, checkInStat, color, brand, model, neededRepairs, total, cashier) {
   try {
-    return await repairSlipCol.insertOne({ customerId: ObjectID(customerId), slipNumber, imei, checkInStat, color, brand, model, neededRepairs, total: parseFloat(total), cashier })
+    const slip = await repairSlipCol.insertOne({ customerId: ObjectID(customerId), slipNumber, imei, checkInStat, color, brand, model, neededRepairs, total: parseFloat(total), cashier })
+    if (slip.acknowledged) {
+      genSlip()
+      return slip
+    }
   } catch (e) {
     console.dir(e, { depth: null })
     return e
