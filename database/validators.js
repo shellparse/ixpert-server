@@ -131,7 +131,16 @@ const validateRepairSlip = {
         neededRepairs: {
           bsonType: 'array',
           items: {
-            bsonType: 'string'
+            bsonType: 'object',
+            additionalProperties: false,
+            properties: {
+              repair: {
+                bsonType: 'string'
+              },
+              price: {
+                bsonType: 'number'
+              }
+            }
           }
         },
         repairStatus: {
