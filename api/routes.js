@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { retrieveInvoice, genInvoiceNo, retrieveInvoiceNo, createInvoice, editInv, retrieveInvItems, createInv, createSlipPdf, retrieveSlipNo, retrieveCustomers, signUp, findUser, editUser, createCustomer, retrieveCustomer, createSlip, retrieveSlip } = require('../controllers/controller.js')
+const { retrieveInvoice, genInvoiceNo, retrieveInvoiceNo, createInvoice, editInv, retrieveInvItems, createInv, retrieveSlipNo, retrieveCustomers, signUp, findUser, editUser, createCustomer, retrieveCustomer, createSlip, retrieveSlip } = require('../controllers/controller.js')
 
 router.get('/', (req, res) => {
   res.send('hello router')
@@ -31,13 +31,7 @@ router.route('/customer/:id').get(async (req, res) => {
   res.json(await retrieveCustomer(req.params.id))
 })
 router.route('/slip').post(async (req, res) => {
-  const { customerId, imei, slipNumber, checkInStat, brand, model, color, neededRepairs, total, cashier, returned, passCode, customerName, customerPhone, customerEmail } = req.body
-  const newSlip = await createSlip(customerId, slipNumber, imei, checkInStat, color, brand, model, neededRepairs, total, cashier, returned, passCode)
-  if (newSlip.acknowledged) {
-    await createSlipPdf({ customerId, imei, slipNumber, checkInStat, brand, model, color, neededRepairs, total, cashier, returned, passCode, customerName, customerPhone, customerEmail }, res)
-  } else {
-    res.json({ Error: "could'nt insert in database" })
-  }
+  await createSlip(req.body, res)
 }).get(async (req, res) => {
   res.json(await retrieveSlip(req.body.slipNumber))
 })

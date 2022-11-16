@@ -26,8 +26,20 @@ async function retrieveCustomer (param) {
     }
   }
 }
-async function createSlip () {
-  return await insertSlip(...arguments)
+async function createSlip (slip, res) {
+  const { customerDetails, ...rest } = slip
+  const newSlip = await insertSlip(rest)
+  if (newSlip.acknowledged) {
+    try {
+      if (slip.customerDetails) {
+        genSlipPdf(slip, res)
+      } else {
+        throw Error
+      }
+    } catch (e) {
+      res.json({ error: 'slip created but failed to generate pdf' })
+    }
+  }
 }
 async function retrieveSlip (slipNumber) {
   return await getSlip(slipNumber)
@@ -37,9 +49,6 @@ async function retrieveCustomers (amount) {
 }
 async function retrieveSlipNo () {
   return await getSlipNo()
-}
-async function createSlipPdf (data, res) {
-  return await genSlipPdf(data, res)
 }
 async function createInv () {
   return await insertInv(...arguments)
@@ -85,7 +94,6 @@ module.exports = {
   retrieveSlip,
   retrieveCustomers,
   retrieveSlipNo,
-  createSlipPdf,
   createInv,
   retrieveInvItems,
   editInv,

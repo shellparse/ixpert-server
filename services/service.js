@@ -90,12 +90,12 @@ async function getCustomerById (_id) {
     return e
   }
 }
-async function insertSlip (customerId, slipNumber, imei, checkInStat, color, brand, model, neededRepairs, total, cashier) {
+async function insertSlip (slip) {
   try {
-    const slip = await repairSlipCol.insertOne({ customerId: ObjectID(customerId), slipNumber, imei, checkInStat, color, brand, model, neededRepairs, total: parseFloat(total), cashier })
-    if (slip.acknowledged) {
+    const newSlip = await repairSlipCol.insertOne({ ...slip, customerId: ObjectID(slip.customerId), total: parseFloat(slip.total) })
+    if (newSlip.acknowledged) {
       genSlip()
-      return slip
+      return newSlip
     }
   } catch (e) {
     console.dir(e, { depth: null })
@@ -330,9 +330,9 @@ async function genSlipPdf (data, res) {
     .lineTo(419.53, 105)
     .stroke()
   doc.text('Client details: ', -100, 110)
-  doc.text(`Name: ${data.customerName}`)
-    .text(`Phone number: ${data.customerPhone}`)
-    .text(`Email: ${data.customerEmail}`).moveDown()
+  doc.text(`Name: ${data.customerDetails.name}`)
+    .text(`Phone number: ${data.customerDetails.phoneNumber}`)
+    .text(`Email: ${data.customerDetails.email}`).moveDown()
     .moveTo(-140, 185)
     .lineTo(419.53, 185)
     .stroke()
@@ -354,7 +354,7 @@ async function genSlipPdf (data, res) {
     .stroke()
   doc.text('Repairs to be done:', 100, 190, { width: 220 }).moveDown()
   data.neededRepairs.forEach((repair) => {
-    doc.text(repair)
+    doc.text(repair.repair)
   })
   doc.moveTo(-140, 490)
     .lineTo(419.53, 490)
@@ -379,7 +379,6 @@ module.exports = {
   insertSlip,
   getSlip,
   getCustomerById,
-  genSlip,
   getCustomers,
   getSlipNo,
   genSlipPdf,
