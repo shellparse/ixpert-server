@@ -157,6 +157,9 @@ const validateRepairSlip = {
         },
         passCode: {
           bsonType: 'string'
+        },
+        notes: {
+          bsonType: 'string'
         }
       }
     }

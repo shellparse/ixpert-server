@@ -92,7 +92,7 @@ async function getCustomerById (_id) {
 }
 async function insertSlip (slip) {
   try {
-    const newSlip = await repairSlipCol.insertOne({ ...slip, customerId: ObjectID(slip.customerId), total: parseFloat(slip.total) })
+    const newSlip = await repairSlipCol.insertOne({ ...slip, slipNumber: slip.slipNumber.toString(), customerId: ObjectID(slip.customerId), total: parseFloat(slip.total) })
     if (newSlip.acknowledged) {
       genSlip()
       return newSlip
@@ -104,7 +104,16 @@ async function insertSlip (slip) {
 }
 async function getSlip (slipNumber) {
   try {
-    return await repairSlipCol.findOne({ slipNumber })
+    return await repairSlipCol.aggregate([{ $match: slipNumber ? { slipNumber } : {} },
+      {
+        $lookup: {
+          from: 'customer',
+          localField: 'customerId',
+          foreignField: '_id',
+          as: 'customerDetails'
+        }
+      }
+    ]).toArray()
   } catch (e) {
     console.dir(e, { depth: null })
     return e
