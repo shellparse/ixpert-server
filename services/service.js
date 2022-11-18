@@ -311,7 +311,7 @@ async function genSlipPdf (data, res) {
   const faults = []
   for (const prop in data.checkInStat) {
     if (!data.checkInStat[prop]) {
-      faults.push(prop)
+      faults.push(prop.split(/(?=[A-Z])/).join(' ').toLowerCase())
     }
     if (prop === 'notes') {
       faults.push(`Notes: ${data.checkInStat[prop]}`)
@@ -355,8 +355,14 @@ async function genSlipPdf (data, res) {
   doc.moveTo(-140, 330)
     .lineTo(419.53, 330)
     .stroke()
-  faults.forEach((fault) => {
-    doc.text(fault)
+  // doc.text(faults.join(' '), { width: 100 })
+  faults.forEach((fault, index) => {
+    if (index <= 7) {
+      doc.text(fault)
+    } else if (index === 8) {
+      doc.moveTo(70, 300)
+      .text(fault)
+    }
   })
   doc.moveTo(70, 185)
     .lineTo(70, 330)
