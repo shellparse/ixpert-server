@@ -355,13 +355,11 @@ async function genSlipPdf (data, res) {
   doc.moveTo(-140, 330)
     .lineTo(419.53, 330)
     .stroke()
-  // doc.text(faults.join(' '), { width: 100 })
   faults.forEach((fault, index) => {
-    if (index <= 7) {
+    if (index === 7) {
+      doc.text(fault, -15, 210)
+    } else {
       doc.text(fault)
-    } else if (index === 8) {
-      doc.moveTo(70, 300)
-      .text(fault)
     }
   })
   doc.moveTo(70, 185)
