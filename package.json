@@ -4,7 +4,6 @@
   "description": "ixpert backend server",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test",
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
