@@ -8,7 +8,7 @@ app.use(bodyParser.json())
 app.use(router)
 
 // open the database connection at startup and start listening
-
+console.log('app starting')
 app.listen(process.env.PORT || 3000, () => {
   console.log('server is listening')
 })
